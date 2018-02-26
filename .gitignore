@@ -1,5 +1,4 @@
 /dev/nbproject/private/
-/infra/mysql/db/
-/infra/mongodb/data/
-/dev/
+/infra/mysql/db/*
+/infra/mongodb/data/*
 .idea
