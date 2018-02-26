@@ -1,0 +1,7 @@
+FROM  mysql:latest
+
+ADD ./infra/mysql/config/mysqld.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+
+EXPOSE 3306
+
+

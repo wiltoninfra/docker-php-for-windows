@@ -1,0 +1,45 @@
+FROM debian
+
+MAINTAINER Wilton Guilherme - TBF HOST <wiltoninfra@gmail.com>
+
+
+
+RUN apt-get update
+
+RUN apt-get install software-properties-common -y
+
+
+RUN apt update && apt install -y \
+	curl 		\
+	dnsutils 	\
+	gcc			\
+	wget 		\
+	build-essential 	\
+	git 	\
+	g++ 	\
+	vim		\
+	cron	\
+	openssh-server \
+	make
+
+RUN wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
+    && dpkg -i erlang-solutions_1.0_all.deb \
+    && apt-get update \
+    && apt-get install erlang erlang-nox -y \
+    && echo 'deb http://www.rabbitmq.com/debian/ testing main' \
+    && tee /etc/apt/sources.list.d/rabbitmq.list \
+    && apt-get update \
+    && apt-get install rabbitmq-server -y
+
+RUN systemctl enable rabbitmq-server \
+    && service rabbitmq-server start \
+    && rabbitmq-plugins enable rabbitmq_management \
+    && service rabbitmq-server restart
+
+ADD ./rabbitmq-user.sh /rabbitmq-user.sh
+RUN chmod +x /rabbitmq-user.sh
+
+EXPOSE 4369 5671 5672 15671 15672
+
+CMD ["sh /rabbitmq-user.sh"]
+CMD ["rabbitmq-server"]
